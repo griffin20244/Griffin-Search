@@ -1,37 +1,97 @@
-# Griffin Search
+# 🦅 Griffin Search
 
-A Persian-first, bilingual web search app that runs locally at `http://127.0.0.1:8080`. It is designed for situations where you have internet access but Google Search and/or Bing are unavailable.
+**Search beyond limits.** Griffin Search is a Persian-first, bilingual web search application that runs on your own computer at `http://127.0.0.1:8080`. It is designed for the exact situation where the internet works but Google Search and/or Bing are unreachable.
 
-## Project status
+Griffin does **not** proxy Google or Bing. It sends search requests to independent providers:
 
-The repository is being initialized with the first working MVP. The app uses independent providers rather than redirecting users to Google or Bing:
+- **DuckDuckGo HTML** — built-in general web search; no API key required.
+- **SearXNG** — optional independent metasearch endpoint. You can run your own instance or configure a trusted one.
+- **Brave Search API** — optional additional provider; requires an API key.
+- **Wikipedia API** — Persian or English encyclopedia results, selected automatically from the query language.
 
-- DuckDuckGo HTML results (primary built-in web provider)
-- SearXNG JSON endpoint (optional, configurable; useful as an alternate metasearch gateway)
-- Wikipedia API (knowledge results and a dependable fallback for encyclopedia searches)
-- Optional Brave Search API key (additional independent provider)
+Each provider is queried independently. If one provider fails, Griffin keeps results from the others and shows provider status. Availability depends on your network; Griffin does not bypass ISP blocks or guarantee that any particular third-party service is reachable.
 
-No provider can be guaranteed reachable on every network. Griffin reports provider failures and tries the next configured source; it does not bypass ISP/network restrictions.
+## Features in v0.2.0
 
-## Run locally
+- Rust + Axum local server, bound to `127.0.0.1` by default.
+- Responsive search interface inspired by familiar search engines, with Persian RTL and English LTR modes.
+- Search tabs: All results, Web, Wikipedia.
+- Automatic Persian/English query-language detection, plus manual language override.
+- Parallel requests to configured web providers and Wikipedia.
+- Provider status, result-source labels, safe HTTP(S)-only result links, duplicate removal.
+- Recent-search history stored only in the browser's local storage.
+- Optional SearXNG and Brave Search configuration through environment variables.
+- Unit tests and GitHub Actions CI.
 
-Requirements: stable Rust toolchain.
+## Run on Windows 10/11
 
-```powershell
-cargo run --release
+1. Install the stable Rust toolchain from <https://rustup.rs/>.
+2. Download or clone this repository.
+3. In PowerShell, open the repository folder and run:
+
+   ```powershell
+   cargo run --release
+   ```
+
+4. Open <http://127.0.0.1:8080> in your browser.
+5. To stop the server, return to the terminal and press `Ctrl+C`.
+
+The first build downloads Rust dependencies, so it needs internet access. Subsequent starts use the local build cache.
+
+## Configure alternate search providers
+
+Copy `.env.example` to `.env` and edit it locally. Griffin loads `.env` on startup.
+
+```dotenv
+GRIFFIN_HOST=127.0.0.1
+GRIFFIN_PORT=8080
+SEARXNG_URL=https://your-searxng-instance.example
+BRAVE_SEARCH_API_KEY=your_private_api_key
 ```
 
-Open <http://127.0.0.1:8080>.
+- `SEARXNG_URL` is the base URL of a SearXNG instance (do not add `/search`).
+- `BRAVE_SEARCH_API_KEY` is optional. Get a key from <https://brave.com/search/api/>.
+- Never commit `.env`, API keys, or other secrets. `.gitignore` excludes `.env`.
+- After changing `.env`, restart Griffin.
 
-Optional configuration can be set with environment variables or a local `.env` file (see `.env.example`):
+For best resilience, use a SearXNG instance you control or trust. Public instances can be rate-limited, unavailable, or blocked on a particular network. See <https://docs.searxng.org/>.
 
-- `GRIFFIN_HOST` (default `127.0.0.1`)
-- `GRIFFIN_PORT` (default `8080`)
-- `SEARXNG_URL` (base URL of your own or a trusted SearXNG instance)
-- `BRAVE_SEARCH_API_KEY` (optional; never commit your key)
+## Architecture
 
-## Notes
+```text
+Browser (localhost)
+       |
+       v
+Rust / Axum API
+       |
+       +---- DuckDuckGo HTML search
+       +---- SearXNG JSON API (optional)
+       +---- Brave Search API (optional)
+       +---- Wikipedia API (fa/en)
+       |
+       v
+Normalize + de-duplicate + validate HTTP(S) links
+       |
+       v
+JSON results + provider status -> Persian/English UI
+```
 
-- Online search requires an internet connection.
-- Wikipedia searches can work even when the general web provider is unavailable, provided Wikipedia is reachable.
-- A future offline archive/index is intentionally separate from online web search; it will be added without pretending that offline data is live web results.
+More detail: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+
+## Important limitations
+
+- Griffin is a **search interface and aggregator**, not a crawler with its own global index. Live web results come from the configured independent providers.
+- It cannot retrieve new internet pages while offline. A future offline archive/index can be added as a separate feature and will be clearly distinguished from live results.
+- If all independent providers are blocked or unreachable from your network, live web search will fail. Configure a reachable SearXNG instance or another supported provider.
+- Search results, availability, ranking, and rate limits are controlled by the third-party providers.
+- The optional Brave API may have usage limits or costs under its own terms.
+
+## Development
+
+```powershell
+cargo fmt --all -- --check
+cargo test
+cargo run
+```
+
+CI runs formatting, tests, and a release build on pushes and pull requests.

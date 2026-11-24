@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#101b2c">
+  <meta name="description" content="Griffin Search — جست‌وجوی وب مستقل، فارسی و انگلیسی، روی سیستم خودت.">
+  <title>Griffin Search — Search Beyond Limits</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --navy: #101b2c;
+      --navy-2: #18263b;
+      --blue: #2563eb;
+      --blue-dark: #1648bf;
+      --ink: #182235;
+      --muted: #6b778b;
+      --line: #e6ebf2;
+      --bg: #f6f8fc;
+      --card: #fff;
+      --green: #19a765;
+      --red: #d94b58;
+      --shadow: 0 12px 36px rgba(19, 39, 71, .07);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink); font-family: Tahoma, "Segoe UI", Arial, sans-serif; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; }
+    .app { min-height: 100vh; display: grid; grid-template-columns: 232px minmax(0, 1fr); }
+    .sidebar { background: linear-gradient(180deg, var(--navy), #142239); color: #edf3fb; padding: 25px 15px 18px; display: flex; flex-direction: column; gap: 28px; }
+    .brand { display: flex; align-items: center; gap: 12px; padding: 2px 8px; direction: ltr; text-align: left; }
+    .brand-mark { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 14px; background: linear-gradient(145deg, #397bff, #1a4cba); box-shadow: 0 8px 22px #1d57c555; font-size: 22px; }
+    .brand-name { font-size: 18px; font-weight: 800; letter-spacing: -.5px; }
+    .brand-sub { display: block; color: #9eadc3; margin-top: 4px; font-size: 9px; font-weight: 500; letter-spacing: 1.3px; }
+    .nav-label { color: #8998ae; padding: 0 13px; margin-bottom: 7px; font-size: 10px; font-weight: 700; letter-spacing: 1px; }
+    .nav { display: grid; gap: 6px; }
+    .nav button { display: flex; align-items: center; gap: 13px; width: 100%; padding: 12px 14px; color: #c8d3e2; text-align: right; border: 0; border-radius: 11px; background: transparent; font-size: 13px; transition: .16s ease; }
+    .nav button:hover { background: #ffffff10; color: #fff; }
+    .nav button.active { background: linear-gradient(100deg, #2868ec, #1c51c9); color: #fff; box-shadow: 0 8px 20px #1246b744; }
+    .nav-icon { width: 19px; display: inline-grid; place-items: center; font-size: 17px; direction: ltr; }
+    .side-spacer { flex: 1; }
+    .source-health { border-top: 1px solid #ffffff20; padding: 17px 8px 0; }
+    .health-title { color: #aab8ca; font-size: 11px; margin-bottom: 11px; }
+    .health-line { display: flex; justify-content: space-between; gap: 8px; margin: 8px 0; color: #d3dceb; font-size: 11px; }
+    .health-dot { width: 7px; height: 7px; border-radius: 50%; background: #8998ae; display: inline-block; margin-left: 5px; }
+    .health-dot.good { background: #35c77f; box-shadow: 0 0 0 3px #35c77f20; }
+    .health-dot.bad { background: #ef6b73; }
+    .side-footer { color: #8190a7; font-size: 10px; line-height: 1.8; padding: 0 9px; }
+    .main { min-width: 0; }
+    .topbar { background: #fff; border-bottom: 1px solid var(--line); padding: 23px clamp(20px, 4vw, 58px) 20px; }
+    .topbar-inner { max-width: 1380px; margin: auto; display: grid; grid-template-columns: 205px minmax(240px, 1fr) auto; align-items: center; gap: 26px; }
+    .wordmark { direction: ltr; text-align: left; white-space: nowrap; font-size: 24px; font-weight: 850; letter-spacing: -1px; }
+    .wordmark span { color: var(--blue); }
+    .wordmark small { display: block; color: #8893a5; font-size: 9px; letter-spacing: 1.35px; font-weight: 600; margin-top: 4px; }
+    .search-form { height: 54px; min-width: 0; display: flex; overflow: hidden; border: 1px solid #dce3ee; border-radius: 16px; background: #fff; box-shadow: 0 5px 20px rgba(31, 57, 93, .06); transition: .2s ease; }
+    .search-form:focus-within { border-color: #8aafff; box-shadow: 0 0 0 4px #2e6ef314, 0 5px 20px rgba(31,57,93,.06); }
+    .search-form input { min-width: 0; flex: 1; padding: 0 19px; border: 0; outline: 0; color: var(--ink); font-size: 16px; background: transparent; }
+    .search-form button { width: 62px; border: 0; color: #fff; background: var(--blue); font-size: 22px; transition: .15s; }
+    .search-form button:hover { background: var(--blue-dark); }
+    .top-actions { display: flex; align-items: center; gap: 11px; }
+    .online-pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 12px; border: 1px solid var(--line); background: #fff; border-radius: 30px; white-space: nowrap; color: #4b586d; font-size: 11px; }
+    .online-dot { width: 8px; height: 8px; background: #23b66f; border-radius: 50%; box-shadow: 0 0 0 3px #23b66f18; }
+    .icon-button { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 12px; color: #58657a; background: #fff; font-size: 16px; }
+    .icon-button:hover { background: #f4f7fc; color: var(--blue); }
+    .tabs-wrap { background: #fff; border-bottom: 1px solid var(--line); }
+    .tabs { max-width: 1380px; margin: auto; display: flex; align-items: center; gap: 27px; padding: 0 clamp(20px, 4vw, 58px); overflow-x: auto; }
+    .tab { position: relative; display: inline-flex; align-items: center; gap: 9px; padding: 17px 2px 16px; border: 0; background: transparent; white-space: nowrap; color: #566277; font-size: 12px; }
+    .tab.active { color: var(--blue); font-weight: 700; }
+    .tab.active::after { content: ""; position: absolute; bottom: -1px; right: 0; left: 0; height: 3px; border-radius: 3px 3px 0 0; background: var(--blue); }
+    .content { max-width: 1380px; margin: 0 auto; padding: 24px clamp(20px, 4vw, 58px) 55px; display: grid; grid-template-columns: minmax(0, 1fr) 315px; gap: clamp(24px, 4vw, 52px); }
+    .results-column { min-width: 0; }
+    .result-meta { min-height: 26px; margin: 0 0 22px; color: #788397; font-size: 11px; }
+    .result-card { padding: 0 0 23px; margin-bottom: 18px; border-bottom: 1px solid var(--line); }
+    .result-source { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; color: #58657a; font-size: 11px; }
+    .source-avatar { width: 23px; height: 23px; display: grid; place-items: center; border-radius: 50%; background: #eaf0fa; color: #36568d; font-size: 10px; font-weight: 800; }
+    .result-url { direction: ltr; text-align: right; margin: 0 0 5px; color: #43866a; font-size: 10px; overflow-wrap: anywhere; }
+    .result-title { margin: 0 0 6px; color: #174fc4; font-size: 18px; line-height: 1.7; font-weight: 500; }
+    .result-title a { text-decoration: none; }
+    .result-title a:hover { text-decoration: underline; }
+    .result-snippet { margin: 0; color: #485468; font-size: 13px; line-height: 2; }
+    .result-kind { display: inline-block; margin-top: 9px; padding: 4px 9px; border-radius: 20px; background: #edf3ff; color: #4164a6; font-size: 9px; }
+    .knowledge-card { position: sticky; top: 22px; align-self: start; overflow: hidden; border: 1px solid var(--line); border-radius: 17px; background: #fff; box-shadow: var(--shadow); }
+    .knowledge-head { padding: 20px 20px 13px; }
+    .knowledge-eyebrow { color: #8290a4; font-size: 9px; letter-spacing: .8px; font-weight: 700; margin-bottom: 9px; }
+    .knowledge-title { margin: 0 0 8px; font-size: 18px; line-height: 1.6; }
+    .knowledge-subtitle { color: #718096; font-size: 11px; }
+    .knowledge-body { padding: 0 20px 19px; }
+    .knowledge-body p { margin: 0; color: #4c596d; font-size: 12px; line-height: 2; }
+    .knowledge-link { display: flex; justify-content: center; margin: 0 16px 16px; padding: 12px; border: 1px solid #dce5f5; border-radius: 11px; color: var(--blue); font-size: 11px; text-decoration: none; }
+    .knowledge-link:hover { background: #f5f8ff; }
+    .side-note { margin: 14px 16px 17px; padding: 12px; border-radius: 10px; background: #f4f7fc; color: #63718a; font-size: 10px; line-height: 1.9; }
+    .welcome { display: grid; justify-items: center; text-align: center; padding: 70px 18px; color: #8290a4; }
+    .welcome-mark { width: 62px; height: 62px; display: grid; place-items: center; margin-bottom: 13px; border-radius: 21px; background: #eaf1ff; color: var(--blue); font-size: 30px; }
+    .welcome h2 { margin: 0 0 8px; color: #26354d; font-size: 18px; }
+    .welcome p { max-width: 450px; margin: 0; font-size: 12px; line-height: 2; }
+    .empty { padding: 35px 20px; text-align: center; color: #7e899a; font-size: 12px; line-height: 2; border: 1px dashed #d5ddea; border-radius: 15px; background: #ffffff8a; }
+    .loading { display: flex; align-items: center; gap: 11px; padding: 30px 5px; color: #697991; font-size: 12px; }
+    .spinner { width: 20px; height: 20px; border: 2px solid #dbe5fa; border-top-color: var(--blue); border-radius: 50%; animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .history { margin-top: 20px; }
+    .history-head { display: flex; align-items: center; justify-content: space-between; color: #8792a3; font-size: 10px; margin-bottom: 9px; }
+    .history-list { display: flex; flex-wrap: wrap; gap: 7px; }
+    .history-chip { border: 1px solid #e0e6ef; background: #fff; border-radius: 20px; color: #657187; font-size: 10px; padding: 7px 10px; }
+    .history-chip:hover { color: var(--blue); border-color: #adc4f6; }
+    .clear-history { padding: 0; border: 0; background: none; color: var(--blue); font-size: 10px; }
+    .footer { text-align: center; color: #9aa4b3; padding: 18px; font-size: 10px; }
+    dialog { width: min(520px, calc(100% - 30px)); padding: 0; border: 1px solid var(--line); border-radius: 17px; box-shadow: 0 24px 80px #0d1b3266; color: var(--ink); }
+    dialog::backdrop { background: #101b2c88; backdrop-filter: blur(3px); }
+    .dialog-head { display: flex; align-items: center; justify-content: space-between; padding: 19px 22px; border-bottom: 1px solid var(--line); }
+    .dialog-head h2 { margin: 0; font-size: 16px; }
+    .dialog-body { padding: 20px 22px 23px; font-size: 12px; line-height: 2; color: #566277; }
+    .dialog-body code { direction: ltr; display: inline-block; padding: 2px 6px; border-radius: 5px; background: #eff3f9; color: #294a85; }
+    .dialog-body a { color: var(--blue); }
+    .dialog-close { border: 0; background: none; font-size: 20px; color: #788397; }
+    @media (max-width: 1050px) { .topbar-inner { grid-template-columns: 170px minmax(200px, 1fr) auto; gap: 15px; } .content { grid-template-columns: minmax(0, 1fr) 275px; } }
+    @media (max-width: 800px) { .app { grid-template-columns: 1fr; } .sidebar { display: none; } .topbar-inner { grid-template-columns: 1fr auto; } .wordmark { display: none; } .top-actions { justify-content: flex-end; } .content { grid-template-columns: 1fr; } .knowledge-card { position: static; order: -1; } .tabs { gap: 19px; } }
+    @media (max-width: 480px) { .topbar { padding: 15px 14px; } .topbar-inner { grid-template-columns: minmax(0,1fr) auto; gap: 8px; } .online-pill { padding: 8px; font-size: 10px; } .icon-button { width: 34px; height: 34px; } .search-form { grid-column: 1 / -1; grid-row: 2; height: 49px; } .top-actions { grid-column: 1 / -1; grid-row: 1; } .tabs { padding: 0 15px; } .tab { padding: 14px 1px; } .content { padding: 20px 15px 35px; } .result-title { font-size: 16px; } }
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">🦅</div>
+      <div><div class="brand-name">Griffin Search</div><span class="brand-sub">SEARCH BEYOND LIMITS</span></div>
+    </div>
+    <div>
+      <div class="nav-label" data-i18n="searchNav">جست‌وجو</div>
+      <nav class="nav" aria-label="Search categories">
+        <button class="active" data-tab="all"><span class="nav-icon">⌕</span><span data-i18n="allResults">همه نتایج</span></button>
+        <button data-tab="web"><span class="nav-icon">◎</span><span data-i18n="webPages">صفحات وب</span></button>
+        <button data-tab="wiki"><span class="nav-icon">W</span><span data-i18n="wikipedia">ویکی‌پدیا</span></button>
+      </nav>
+    </div>
+    <div class="side-spacer"></div>
+    <div class="source-health">
+      <div class="health-title" data-i18n="healthTitle">وضعیت منابع جست‌وجو</div>
+      <div id="provider-list">
+        <div class="health-line"><span>DuckDuckGo</span><span><i class="health-dot"></i> آماده</span></div>
+        <div class="health-line"><span>Wikipedia</span><span><i class="health-dot"></i> آماده</span></div>
+      </div>
+    </div>
+    <div class="nav">
+      <button id="settings-button"><span class="nav-icon">⚙</span><span data-i18n="settings">تنظیمات و منابع</span></button>
+      <button id="about-button"><span class="nav-icon">ⓘ</span><span data-i18n="about">درباره Griffin</span></button>
+    </div>
+    <div class="side-footer"><span data-i18n="versionFooter">GRIFFIN SEARCH · v0.2.0</span><br><span data-i18n="localRun">اجرای محلی روی دستگاه شما</span></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="wordmark"><span>GRIFFIN</span> SEARCH<small>SEARCH BEYOND LIMITS</small></div>
+        <form class="search-form" id="search-form" role="search">
+          <input id="query" name="q" value="محمدرضا شاه پهلوی" placeholder="جست‌وجو در وب…" autocomplete="off" aria-label="عبارت جست‌وجو">
+          <button type="submit" aria-label="Search">⌕</button>
+        </form>
+        <div class="top-actions">
+          <span class="online-pill"><i class="online-dot"></i><span id="mode-label" data-i18n="onlineMode">حالت آنلاین</span></span>
+          <button class="icon-button" id="lang-button" title="تغییر زبان رابط" aria-label="Toggle interface language">FA</button>
+          <button class="icon-button" id="settings-top" title="تنظیمات" aria-label="Settings">⚙</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="tabs-wrap">
+      <nav class="tabs" aria-label="Result types">
+        <button class="tab active" data-tab="all">⌕ <span data-i18n="allResults">همه نتایج</span></button>
+        <button class="tab" data-tab="web">◎ <span data-i18n="webPages">صفحات وب</span></button>
+        <button class="tab" data-tab="wiki">W <span data-i18n="wikipedia">ویکی‌پدیا</span></button>
+      </nav>
+    </div>
+
+    <section class="content">
+      <div class="results-column">
+        <div class="result-meta" id="result-meta"><span data-i18n="initialMeta">عبارت را جست‌وجو کن تا نتایج منابع مستقل نمایش داده شوند.</span></div>
+        <div id="results">
+          <div class="welcome">
+            <div class="welcome-mark">⌕</div>
+            <h2 data-i18n="welcomeTitle">به Griffin Search خوش آمدی</h2>
+            <p data-i18n="welcomeBody">وب را بدون وابستگی به Google یا Bing جست‌وجو کن. Griffin از چند منبع مستقل استفاده می‌کند و در صورت خطای یک منبع، نتیجه منابع دیگر را نگه می‌دارد.</p>
+          </div>
+        </div>
+        <div class="history" id="history-panel" hidden>
+          <div class="history-head"><span data-i18n="recent">جست‌وجوهای اخیر</span><button class="clear-history" id="clear-history" data-i18n="clearHistory">پاک‌کردن تاریخچه</button></div>
+          <div class="history-list" id="history-list"></div>
+        </div>
+      </div>
+      <aside class="knowledge-card" id="knowledge-card">
+        <div class="knowledge-head">
+          <div class="knowledge-eyebrow">GRIFFIN KNOWLEDGE</div>
+          <h2 class="knowledge-title">جست‌وجوی مستقل وب</h2>
+          <div class="knowledge-subtitle">فارسی و انگلیسی · آنلاین</div>
+        </div>
+        <div class="knowledge-body"><p>وقتی دامنه Google یا Bing در دسترس نیست، Griffin تلاش می‌کند از موتورهای جست‌وجوی مستقل و منابع دانشنامه‌ای استفاده کند.</p></div>
+        <div class="side-note">نکته: دسترسی به هر منبع به وضعیت شبکه و محدودیت‌های منطقه‌ای بستگی دارد. Griffin محدودیت شبکه را دور نمی‌زند؛ منابع جایگزین را امتحان می‌کند.</div>
+      </aside>
+    </section>
+    <footer class="footer" data-i18n="footer">Griffin Search · مستقل از Google و Bing · جست‌وجو از منابع بیرونی دریافت می‌شود</footer>
+  </main>
+</div>
+
+<dialog id="settings-dialog">
+  <div class="dialog-head"><h2 data-i18n="settingsTitle">تنظیمات و منابع جست‌وجو</h2><button class="dialog-close" data-close="settings-dialog" aria-label="Close">×</button></div>
+  <div class="dialog-body" id="settings-copy">
+    <p><b>منابع پیش‌فرض:</b> DuckDuckGo برای وب و Wikipedia برای دانشنامه. این برنامه هیچ درخواستی به دامنه‌های Google یا Bing ارسال نمی‌کند.</p>
+    <p><b>افزودن SearXNG:</b> یک نمونه شخصی یا مورداعتماد SearXNG راه‌اندازی کن، سپس آدرس پایه را در فایل <code>.env</code> با نام <code>SEARXNG_URL</code> قرار بده. Griffin آن را در کنار منابع دیگر امتحان می‌کند.</p>
+    <p><b>افزودن Brave Search:</b> کلید API را فقط در فایل محلی <code>.env</code> و با نام <code>BRAVE_SEARCH_API_KEY</code> ذخیره کن. کلید را در GitHub یا کد مرورگر قرار نده.</p>
+    <p>بعد از تغییر فایل <code>.env</code>، سرور را یک‌بار خاموش و دوباره اجرا کن. نمونه تنظیمات در <code>.env.example</code> قرار دارد.</p>
+    <p><a href="https://docs.searxng.org/" target="_blank" rel="noopener noreferrer">مستندات SearXNG</a> · <a href="https://brave.com/search/api/" target="_blank" rel="noopener noreferrer">Brave Search API</a></p>
+  </div>
+</dialog>
+<dialog id="about-dialog">
+  <div class="dialog-head"><h2 data-i18n="aboutTitle">درباره Griffin Search</h2><button class="dialog-close" data-close="about-dialog" aria-label="Close">×</button></div>
+  <div class="dialog-body" id="about-copy">
+    <p><b>Griffin Search</b> یک رابط جست‌وجوی محلی و دوزبانه است که برای شبکه‌هایی طراحی شده که اتصال اینترنت دارند اما دسترسی به Google Search یا Bing ممکن نیست.</p>
+    <p>نتایج زنده از منابع مستقل می‌آیند؛ بنابراین اگر همه منابع جایگزین نیز در شبکه تو مسدود باشند، جست‌وجوی وب زنده ممکن نیست. برای پایداری بیشتر، SearXNG شخصی یا سرویس‌های معتبر جایگزین را پیکربندی کن.</p>
+  </div>
+</dialog>
+
+<script>
+(() => {
+  const form = document.getElementById('search-form');
+  const input = document.getElementById('query');
+  const resultHost = document.getElementById('results');
+  const meta = document.getElementById('result-meta');
+  const providerList = document.getElementById('provider-list');
+  const historyPanel = document.getElementById('history-panel');
+  const historyList = document.getElementById('history-list');
+  const tabs = [...document.querySelectorAll('[data-tab]')];
+  let activeTab = 'all';
+  let latestWiki = null;
+  let uiLang = 'fa';
+  let effectiveLang = 'fa';
+  const HISTORY_KEY = 'griffin-search-history-v1';
+
+  const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[char]);
+  const safeHttpUrl = value => {
+    try { const url = new URL(value); return ['http:', 'https:'].includes(url.protocol) ? url.href : '#'; }
+    catch { return '#'; }
+  };
+  const iconForSource = source => source.includes('Wikipedia') || source.includes('ویکی') ? 'W' : source.includes('Brave') ? 'B' : source.includes('SearXNG') ? 'S' : 'D';
+  const textForKind = kind => kind === 'wiki' ? 'دانشنامه' : 'صفحه وب';
+
+  function setActiveTab(tab) {
+    activeTab = tab;
+    tabs.forEach(button => button.classList.toggle('active', button.dataset.tab === tab));
+  }
+
+  function updateProviders(providers = []) {
+    if (!providers.length) return;
+    providerList.innerHTML = providers.map(provider => {
+      const state = provider.available === true ? 'good' : provider.available === false ? 'bad' : '';
+      const t = translations[uiLang];
+      const label = provider.available === true ? t.onlineOk : provider.available === false ? t.onlineBad : provider.configured ? t.configured : t.optional;
+      return `<div class="health-line" title="${escapeHtml(provider.detail)}"><span>${escapeHtml(provider.name)}</span><span><i class="health-dot ${state}"></i>${label}</span></div>`;
+    }).join('');
+  }
+
+  function renderKnowledge(wikiResult) {
+    const card = document.getElementById('knowledge-card');
+    if (!wikiResult) {
+      card.innerHTML = uiLang === 'fa'
+        ? `<div class="knowledge-head"><div class="knowledge-eyebrow">GRIFFIN KNOWLEDGE</div><h2 class="knowledge-title">جست‌وجوی مستقل وب</h2><div class="knowledge-subtitle">فارسی و انگلیسی · آنلاین</div></div><div class="knowledge-body"><p>برای اطلاعات دانشنامه‌ای، تب ویکی‌پدیا را انتخاب کن. در جست‌وجوی همه نتایج، مقاله مرتبط اینجا نمایش داده می‌شود.</p></div><div class="side-note">دسترسی هر منبع به وضعیت شبکه تو بستگی دارد. منابع جایگزین تضمین‌شده نیستند.</div>`
+        : `<div class="knowledge-head"><div class="knowledge-eyebrow">GRIFFIN KNOWLEDGE</div><h2 class="knowledge-title">Independent web search</h2><div class="knowledge-subtitle">Persian & English · Online</div></div><div class="knowledge-body"><p>Choose the Wikipedia tab for encyclopedia searches. In All results, a related article appears here when available.</p></div><div class="side-note">Provider access depends on your network. Alternative providers are not guaranteed to be reachable.</div>`;
+      return;
+    }
+    card.innerHTML = `<div class="knowledge-head"><div class="knowledge-eyebrow">WIKIPEDIA · KNOWLEDGE PANEL</div><h2 class="knowledge-title">${escapeHtml(wikiResult.title)}</h2><div class="knowledge-subtitle">${escapeHtml(wikiResult.source)}</div></div><div class="knowledge-body"><p>${escapeHtml(wikiResult.snippet || 'برای خواندن توضیحات کامل، مقاله را باز کن.')}</p></div><a class="knowledge-link" href="${escapeHtml(safeHttpUrl(wikiResult.url))}" target="_blank" rel="noopener noreferrer">مطالعه مقاله کامل ↗</a>`;
+  }
+
+  function renderResults(data) {
+    const items = data.results || [];
+    latestWiki = items.find(item => item.kind === 'wiki') || null;
+    updateProviders(data.providers || []);
+    renderKnowledge(latestWiki);
+    meta.textContent = uiLang === 'fa'
+      ? `${items.length.toLocaleString('fa-IR')} نتیجه · ${data.elapsed_ms} ms · منابع: ${(data.sources || []).join('، ') || '—'}`
+      : `${items.length.toLocaleString('en-US')} results · ${data.elapsed_ms} ms · Sources: ${(data.sources || []).join(', ') || '—'}`;
+    if (!items.length) {
+      const noResults = uiLang === 'fa' ? (data.notice || 'نتیجه‌ای دریافت نشد. عبارت دیگری را امتحان کن یا یک منبع جایگزین تنظیم کن.') : 'No results were received. Try a different query or configure another provider.';
+      resultHost.innerHTML = `<div class="empty">${escapeHtml(noResults)}</div>`;
+      return;
+    }
+    resultHost.innerHTML = items.map(item => {
+      const url = safeHttpUrl(item.url);
+      return `<article class="result-card">
+        <div class="result-source"><span class="source-avatar">${escapeHtml(iconForSource(item.source))}</span><span>${escapeHtml(item.source)}</span></div>
+        <div class="result-url">${escapeHtml(item.url)}</div>
+        <h2 class="result-title"><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title)}</a></h2>
+        <p class="result-snippet">${escapeHtml(item.snippet || 'برای مشاهده جزئیات، نتیجه را باز کن.')}</p>
+        <span class="result-kind">${uiLang === 'fa' ? textForKind(item.kind) : (item.kind === 'wiki' ? 'Encyclopedia' : 'Web page')}</span>
+      </article>`;
+    }).join('');
+  }
+
+  function loadHistory() {
+    let items = [];
+    try { items = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch { items = []; }
+    historyPanel.hidden = !items.length;
+    historyList.innerHTML = items.slice(0, 7).map(term => `<button class="history-chip" type="button">${escapeHtml(term)}</button>`).join('');
+    [...historyList.querySelectorAll('button')].forEach(button => button.addEventListener('click', () => {
+      input.value = button.textContent;
+      form.requestSubmit();
+    }));
+  }
+
+  function saveHistory(term) {
+    let items = [];
+    try { items = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch { items = []; }
+    items = [term, ...items.filter(item => item !== term)].slice(0, 7);
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(items));
+    loadHistory();
+  }
+
+  async function search(term) {
+    meta.innerHTML = `<span class="loading"><i class="spinner"></i> ${translations[uiLang].searching}</span>`;
+    resultHost.innerHTML = `<div class="loading"><i class="spinner"></i> ${translations[uiLang].receiving}</div>`;
+    renderKnowledge(null);
+    try {
+      effectiveLang = /[\u0600-\u06FF]/.test(term) ? 'fa' : 'en';
+      const params = new URLSearchParams({ q: term, lang: effectiveLang, tab: activeTab });
+      const response = await fetch(`/api/search?${params.toString()}`, { headers: { 'Accept': 'application/json' } });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'درخواست جست‌وجو ناموفق بود.');
+      renderResults(data);
+      saveHistory(term);
+    } catch (error) {
+      meta.textContent = uiLang === 'fa' ? 'ارتباط با سرور Griffin برقرار نشد' : 'Could not connect to the Griffin server';
+      const hint = uiLang === 'fa' ? 'بررسی کن برنامه با دستور' : 'Make sure the app is running with';
+      resultHost.innerHTML = `<div class="empty">${escapeHtml(error.message)}<br>${hint} <code>cargo run --release</code>.</div>`;
+    }
+  }
+
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    const term = input.value.trim();
+    if (!term) { input.focus(); return; }
+    search(term);
+  });
+  tabs.forEach(button => button.addEventListener('click', () => {
+    setActiveTab(button.dataset.tab);
+    if (input.value.trim()) search(input.value.trim());
+  }));
+  document.getElementById('settings-button').addEventListener('click', () => document.getElementById('settings-dialog').showModal());
+  document.getElementById('settings-top').addEventListener('click', () => document.getElementById('settings-dialog').showModal());
+  document.getElementById('about-button').addEventListener('click', () => document.getElementById('about-dialog').showModal());
+  document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click', () => document.getElementById(button.dataset.close).close()));
+  document.getElementById('clear-history').addEventListener('click', () => { localStorage.removeItem(HISTORY_KEY); loadHistory(); });
+  const translations = {
+    fa: {
+      searchNav: 'جست‌وجو', allResults: 'همه نتایج', webPages: 'صفحات وب', wikipedia: 'ویکی‌پدیا',
+      healthTitle: 'وضعیت منابع جست‌وجو', settings: 'تنظیمات و منابع', about: 'درباره Griffin',
+      versionFooter: 'GRIFFIN SEARCH · v0.2.0', localRun: 'اجرای محلی روی دستگاه شما', onlineMode: 'حالت آنلاین',
+      initialMeta: 'عبارت را جست‌وجو کن تا نتایج منابع مستقل نمایش داده شوند.',
+      welcomeTitle: 'به Griffin Search خوش آمدی',
+      welcomeBody: 'وب را بدون وابستگی به Google یا Bing جست‌وجو کن. Griffin از چند منبع مستقل استفاده می‌کند و در صورت خطای یک منبع، نتیجه منابع دیگر را نگه می‌دارد.',
+      settingsTitle: 'تنظیمات و منابع جست‌وجو', aboutTitle: 'درباره Griffin Search',
+      footer: 'Griffin Search · مستقل از Google و Bing · جست‌وجو از منابع بیرونی دریافت می‌شود',
+      placeholder: 'جست‌وجو در وب…', onlineOk: 'پاسخ داد', onlineBad: 'ناموفق', configured: 'تنظیم‌شده', optional: 'اختیاری',
+      kindWiki: 'دانشنامه', kindWeb: 'صفحه وب', searching: 'در حال جست‌وجو در منابع مستقل…', receiving: 'در حال دریافت نتایج زنده از اینترنت',
+      noResults: 'نتیجه‌ای دریافت نشد.', sourceLabel: 'منابع:', resultsLabel: 'نتیجه', recent: 'جست‌وجوهای اخیر', clearHistory: 'پاک‌کردن تاریخچه',
+      settingsCopy: `<p><b>منابع پیش‌فرض:</b> DuckDuckGo برای وب و Wikipedia برای دانشنامه. این برنامه هیچ درخواستی به دامنه‌های Google یا Bing ارسال نمی‌کند.</p><p><b>افزودن SearXNG:</b> یک نمونه شخصی یا مورداعتماد SearXNG راه‌اندازی کن، سپس آدرس پایه را در فایل <code>.env</code> با نام <code>SEARXNG_URL</code> قرار بده.</p><p><b>افزودن Brave Search:</b> کلید API را فقط در فایل محلی <code>.env</code> و با نام <code>BRAVE_SEARCH_API_KEY</code> ذخیره کن. کلید را در GitHub یا کد مرورگر قرار نده.</p><p>بعد از تغییر فایل <code>.env</code>، سرور را یک‌بار خاموش و دوباره اجرا کن. نمونه تنظیمات در <code>.env.example</code> قرار دارد.</p><p><a href="https://docs.searxng.org/" target="_blank" rel="noopener noreferrer">مستندات SearXNG</a> · <a href="https://brave.com/search/api/" target="_blank" rel="noopener noreferrer">Brave Search API</a></p>`,
+      aboutCopy: `<p><b>Griffin Search</b> یک رابط جست‌وجوی محلی و دوزبانه است که برای شبکه‌هایی طراحی شده که اتصال اینترنت دارند اما دسترسی به Google Search یا Bing ممکن نیست.</p><p>نتایج زنده از منابع مستقل می‌آیند؛ بنابراین اگر همه منابع جایگزین نیز در شبکه تو مسدود باشند، جست‌وجوی وب زنده ممکن نیست. برای پایداری بیشتر، SearXNG شخصی یا سرویس‌های معتبر جایگزین را پیکربندی کن.</p>`
+    },
+    en: {
+      searchNav: 'SEARCH', allResults: 'All results', webPages: 'Web pages', wikipedia: 'Wikipedia',
+      healthTitle: 'SEARCH PROVIDERS', settings: 'Settings & sources', about: 'About Griffin',
+      versionFooter: 'GRIFFIN SEARCH · v0.2.0', localRun: 'Running locally on your device', onlineMode: 'Online mode',
+      initialMeta: 'Search to see results from independent providers.',
+      welcomeTitle: 'Welcome to Griffin Search',
+      welcomeBody: 'Search the web without depending on Google or Bing. Griffin queries independent providers and keeps results from other sources when one provider fails.',
+      settingsTitle: 'Search settings & providers', aboutTitle: 'About Griffin Search',
+      footer: 'Griffin Search · Independent of Google and Bing · Results come from external providers',
+      placeholder: 'Search the web…', onlineOk: 'Responded', onlineBad: 'Unavailable', configured: 'Configured', optional: 'Optional',
+      kindWiki: 'Encyclopedia', kindWeb: 'Web page', searching: 'Searching independent providers…', receiving: 'Fetching live results from the internet',
+      noResults: 'No results received.', sourceLabel: 'Sources:', resultsLabel: 'results', recent: 'Recent searches', clearHistory: 'Clear history',
+      settingsCopy: `<p><b>Built-in providers:</b> DuckDuckGo for web search and Wikipedia for encyclopedia results. Griffin does not send requests to Google or Bing domains.</p><p><b>Add SearXNG:</b> Run your own or use a trusted SearXNG instance, then set its base URL in your local <code>.env</code> file as <code>SEARXNG_URL</code>.</p><p><b>Add Brave Search:</b> Store your API key only in your local <code>.env</code> file as <code>BRAVE_SEARCH_API_KEY</code>. Never put the key in GitHub or browser code.</p><p>Restart Griffin after editing <code>.env</code>. See <code>.env.example</code> for the available settings.</p><p><a href="https://docs.searxng.org/" target="_blank" rel="noopener noreferrer">SearXNG documentation</a> · <a href="https://brave.com/search/api/" target="_blank" rel="noopener noreferrer">Brave Search API</a></p>`,
+      aboutCopy: `<p><b>Griffin Search</b> is a local bilingual search interface for networks where internet access works but Google Search or Bing cannot be reached.</p><p>Live results come from independent providers. If every alternative provider is blocked on your network, live web search cannot work. For greater resilience, configure your own SearXNG instance or other reachable providers.</p>`
+    }
+  };
+
+  function updateUiLanguage() {
+    const t = translations[uiLang];
+    document.documentElement.lang = uiLang;
+    document.documentElement.dir = uiLang === 'fa' ? 'rtl' : 'ltr';
+    document.getElementById('lang-button').textContent = uiLang.toUpperCase();
+    input.placeholder = t.placeholder;
+    document.querySelectorAll('[data-i18n]').forEach(node => {
+      const key = node.dataset.i18n;
+      if (t[key]) node.textContent = t[key];
+    });
+    document.getElementById('settings-copy').innerHTML = t.settingsCopy;
+    document.getElementById('about-copy').innerHTML = t.aboutCopy;
+    document.getElementById('result-meta').textContent = t.initialMeta;
+    const title = document.querySelector('.welcome h2');
+    const body = document.querySelector('.welcome p');
+    if (title) title.textContent = t.welcomeTitle;
+    if (body) body.textContent = t.welcomeBody;
+    document.querySelector('.footer').textContent = t.footer;
+  }
+
+  document.getElementById('lang-button').addEventListener('click', () => {
+    uiLang = uiLang === 'fa' ? 'en' : 'fa';
+    updateUiLanguage();
+    if (input.value.trim()) search(input.value.trim());
+  });
+  document.addEventListener('keydown', event => {
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); input.focus(); input.select(); }
+  });
+  updateUiLanguage();
+  loadHistory();
+  fetch('/api/health').then(response => response.json()).then(data => updateProviders(data.providers || [])).catch(() => {});
+  if (input.value.trim()) search(input.value.trim());
+})();
+</script>
+</body>
+</html>
