@@ -5,6 +5,7 @@ use std::collections::HashSet;
 use url::Url;
 
 pub fn validate_query(query: &str) -> Result<(), &'static str> {
+    let query = query.trim();
     if query.is_empty() {
         return Err("عبارت جست‌وجو را وارد کن.");
     }
