@@ -16,7 +16,7 @@ Each provider is queried independently. If one provider fails, Griffin keeps res
 - Rust + Axum local server, bound to `127.0.0.1` by default.
 - Responsive search interface inspired by familiar search engines, with Persian RTL and English LTR modes.
 - Search tabs: All results, Web, Wikipedia.
-- Automatic Persian/English query-language detection, plus manual language override.
+- Automatic Persian/English query-language detection, plus a manual interface-language switch.
 - Parallel requests to configured web providers and Wikipedia.
 - Provider status, result-source labels, safe HTTP(S)-only result links, duplicate removal.
 - Recent-search history stored only in the browser's local storage.
